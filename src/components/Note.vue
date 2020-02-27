@@ -1,20 +1,19 @@
 <template>
   <div class="note" @focusout="saveNote()">
     <h3 class="note__title"
-      :class="{contentEditableTitle: !isNotesPreview}"
+      :class="{note__title_contentEditableTitle: !isNotesPreview}"
       :contenteditable="!isNotesPreview">
       {{note.title}}
     </h3>
     <div class="note__todos">
-      <div v-for="todo of note.todos" :key="todo.id" class="note__todo">
+      <div v-for="todo of note.todos" :key="todo.id" :id="todo.id" class="note__todo">
         <input
           class="note__checkbox"
           v-if="!isNotesPreview"
           type="checkbox"
-          :checked="todo.isComplete"
-          @change="todoChangeStatus(note.id, todo.id)">
+          :checked="todo.isComplete">
         <p class="note__text"
-          :class="{contentEditableText: !isNotesPreview}"
+          :class="{note__text_contentEditableText: !isNotesPreview}"
           :contenteditable="!isNotesPreview">
           {{todo.text}}
         </p>
@@ -22,12 +21,12 @@
     </div>
     <div class="note__buttons-container" v-if="isNotesPreview">
       <button
-        class="note__button note__button-edit"
+        class="note__button"
         @click="editNote(note)">
         Edit
       </button>
       <button
-        class="note__button note__button-delete"
+        class="note__button"
         @click="deleteNote(note)">
         Delete
       </button>
@@ -40,10 +39,6 @@ export default {
   name: 'Note',
   props: ['note', 'isNotesPreview'],
   methods: {
-    todoChangeStatus(noteID, todoID) {
-      const IDs = { noteID, todoID };
-      this.$store.dispatch('todoChangeStatus', IDs);
-    },
     editNote(note) {
       this.$store.dispatch('editNote', note).then(() => this.$router.push('/editing'));
     },
@@ -52,6 +47,23 @@ export default {
       this.$store.dispatch('deleteNote', noteID);
     },
     saveNote() {
+      const todos = Array.prototype.slice.call(document.querySelectorAll('.note__todo'));
+      const newTodos = [];
+      todos.forEach((item) => {
+        newTodos.push(
+          {
+            id: item.childNodes[1].getAttribute('id'),
+            isComplete: item.childNodes[0].checked,
+            text: item.childNodes[1].textContent,
+          },
+        );
+      });
+      const note = {
+        id: this.note.id,
+        title: document.querySelector('.note__title').textContent,
+        todos: newTodos,
+      };
+      this.$store.dispatch('saveNote', note);
     },
   },
 };
@@ -73,12 +85,12 @@ export default {
   width: 100%;
   margin: 0;
   color: white;
-  border: 2px solid #0099ff;
+  border-bottom: 2px solid #0099ff;
   background-color: #0099ff;
   padding: 10px 10px 10px 5%;
   transition: all 0.5s;
 }
-.contentEditableTitle {
+.note__title_contentEditableTitle {
   &:hover {
     cursor: pointer;
     background-color: white;
@@ -96,7 +108,6 @@ export default {
 }
 .note__todo {
   display: flex;
-  margin: 0;
 }
 .note__checkbox {
   margin-right: 5%;
@@ -104,9 +115,10 @@ export default {
 .note__text {
   width: 80%;
   padding: 2%;
+  margin: 0;
   transition: all 0.5s;
 }
-.contentEditableText {
+.note__text_contentEditableText {
   &:hover {
     background-color: #99ccff;
     cursor: pointer;

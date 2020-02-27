@@ -53,12 +53,6 @@ export default new Vuex.Store({
     ],
   },
   mutations: {
-    todoChangeStatus(state, IDs) {
-      const changedTodo = this.state.notes
-        .find((el) => el.id === IDs.noteID).todos
-        .find((el) => el.id === IDs.todoID);
-      changedTodo.isComplete = !changedTodo.isComplete;
-    },
     editNote(state, note) {
       this.state.EditingNote = { ...note };
     },
@@ -67,16 +61,19 @@ export default new Vuex.Store({
       const noteIndex = notes.findIndex((el) => el.id === noteID);
       notes.splice(noteIndex, 1);
     },
+    saveNote(state, note) {
+      this.state.EditingNote = { ...note };
+    },
   },
   actions: {
-    todoChangeStatus(context, IDs) {
-      context.commit('todoChangeStatus', IDs);
-    },
     editNote(context, note) {
       context.commit('editNote', note);
     },
     deleteNote(context, noteID) {
       context.commit('deleteNote', noteID);
+    },
+    saveNote(context, note) {
+      context.commit('saveNote', note);
     },
   },
   modules: {
