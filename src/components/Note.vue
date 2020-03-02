@@ -1,5 +1,5 @@
 <template>
-  <div class="note" @focusout="saveNote()">
+  <div class="note" @focusout="saveChanges()">
     <h3 class="note__title"
       :class="{note__title_contentEditableTitle: !isNotesPreview}"
       :contenteditable="!isNotesPreview">
@@ -17,18 +17,27 @@
           :contenteditable="!isNotesPreview">
           {{todo.text}}
         </p>
+        <button class="note__todo-button" v-if="!isNotesPreview">del</button>
       </div>
     </div>
-    <div class="note__buttons-container" v-if="isNotesPreview">
+    <div class="note__buttons-container">
       <button
+        v-if="isNotesPreview"
         class="note__button"
         @click="editNote(note)">
         Edit
       </button>
       <button
+        v-if="isNotesPreview"
         class="note__button"
         @click="deleteNote(note)">
         Delete
+      </button>
+      <button
+        v-if="!isNotesPreview"
+        class="note__button"
+        @click="addTodo()">
+        Add
       </button>
     </div>
   </div>
@@ -46,8 +55,8 @@ export default {
       const noteID = note.id;
       this.$store.dispatch('deleteNote', noteID);
     },
-    saveNote() {
-      const todos = Array.prototype.slice.call(document.querySelectorAll('.note__todo'));
+    saveChanges() {
+      const todos = document.querySelectorAll('.note__todo');
       const newTodos = [];
       todos.forEach((item) => {
         newTodos.push(
@@ -63,7 +72,8 @@ export default {
         title: document.querySelector('.note__title').textContent,
         todos: newTodos,
       };
-      this.$store.dispatch('saveNote', note);
+      this.$store.dispatch('savePrevChanges')
+        .then(() => this.$store.dispatch('saveLastChanges', note));
     },
   },
 };
@@ -79,13 +89,14 @@ export default {
   height: 20%;
   border: 5px solid #0099ff;
   border-radius: 10px;
+  box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.4)
 }
 .note__title {
   text-align: left;
   width: 100%;
   margin: 0;
   color: white;
-  border-bottom: 2px solid #0099ff;
+  border-bottom: 5px solid #0099ff;
   background-color: #0099ff;
   padding: 10px 10px 10px 5%;
   transition: all 0.5s;
@@ -95,10 +106,12 @@ export default {
     cursor: pointer;
     background-color: white;
     color: #0099ff;
+    border-radius: 10px;
   }
   &:focus {
     background-color: white;
     color: #0099ff;
+    border-radius: 10px;
   }
 }
 .note__todos {
@@ -108,6 +121,10 @@ export default {
 }
 .note__todo {
   display: flex;
+  border-bottom: 1px solid #0099ff;
+  &:last-child {
+    border-bottom: none;
+  }
 }
 .note__checkbox {
   margin-right: 5%;
@@ -116,16 +133,24 @@ export default {
   width: 80%;
   padding: 2%;
   margin: 0;
+  border-radius: 10px;
+  border: 2px solid transparent;
   transition: all 0.5s;
 }
 .note__text_contentEditableText {
   &:hover {
     background-color: #99ccff;
+    border: 2px solid transparent;
     cursor: pointer;
   }
   &:focus {
-    background-color: #99ccff;
+    border: 2px solid #99ccff;
   }
+}
+.note__todo-button {
+  .note__button;
+  width: 7%;
+  margin-top: 1%;
 }
 .note__buttons-container {
   width: 20%;

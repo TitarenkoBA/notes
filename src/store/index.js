@@ -54,15 +54,39 @@ export default new Vuex.Store({
   },
   mutations: {
     editNote(state, note) {
-      this.state.EditingNote = { ...note };
+      state.LastEditingNote = { ...note };
     },
     deleteNote(state, noteID) {
-      const { notes } = this.state;
+      const { notes } = state;
       const noteIndex = notes.findIndex((el) => el.id === noteID);
       notes.splice(noteIndex, 1);
     },
-    saveNote(state, note) {
-      this.state.EditingNote = { ...note };
+    savePrevChanges(state) {
+      state.EditingNote = { ...this.state.LastEditingNote };
+    },
+    saveLastChanges(state, note) {
+      state.LastEditingNote = { ...note };
+    },
+    cleateNewNote() {
+      this.state.LastEditingNote = {
+        id: Math.round(Math.random() * 100),
+        title: 'New note',
+        todos: {},
+      };
+    },
+    saveNote(state) {
+      const newNote = state.LastEditingNote;
+      const note = state.notes.find((el) => el.id === newNote.id);
+      if (note) {
+        note.id = newNote.id;
+        note.title = newNote.title;
+        note.todos = newNote.todos;
+      } else {
+        state.notes.unshift(newNote);
+      }
+    },
+    cancel(state) {
+      state.LastEditingNote = {};
     },
   },
   actions: {
@@ -72,8 +96,20 @@ export default new Vuex.Store({
     deleteNote(context, noteID) {
       context.commit('deleteNote', noteID);
     },
-    saveNote(context, note) {
-      context.commit('saveNote', note);
+    savePrevChanges(context) {
+      context.commit('savePrevChanges');
+    },
+    saveLastChanges(context, note) {
+      context.commit('saveLastChanges', note);
+    },
+    cleateNewNote(context) {
+      context.commit('cleateNewNote');
+    },
+    saveNote(context) {
+      context.commit('saveNote');
+    },
+    cancel(context) {
+      context.commit('cancel');
     },
   },
   modules: {
