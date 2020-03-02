@@ -57,9 +57,10 @@ export default new Vuex.Store({
       state.LastEditingNote = { ...note };
     },
     deleteNote(state, noteID) {
-      const { notes } = state;
-      const noteIndex = notes.findIndex((el) => el.id === noteID);
-      notes.splice(noteIndex, 1);
+      const newNotes = [...state.notes];
+      const noteIndex = newNotes.findIndex((el) => el.id === noteID);
+      newNotes.splice(noteIndex, 1);
+      state.notes = [...newNotes];
     },
     savePrevChanges(state) {
       state.EditingNote = { ...this.state.LastEditingNote };
@@ -75,25 +76,32 @@ export default new Vuex.Store({
       };
     },
     saveNote(state) {
-      const newNote = state.LastEditingNote;
-      const note = state.notes.find((el) => el.id === newNote.id);
+      const newNote = { ...state.LastEditingNote };
+      const newNotes = [...state.notes];
+      const note = newNotes.find((el) => el.id === newNote.id);
       if (note) {
         note.id = newNote.id;
         note.title = newNote.title;
         note.todos = newNote.todos;
       } else {
-        state.notes.unshift(newNote);
+        newNotes.unshift(newNote);
       }
-    },
-    cancel(state) {
-      state.LastEditingNote = {};
+      state.notes = [...newNotes];
     },
     addTodo(state) {
-      state.LastEditingNote.todos.push({
+      const newTodo = {
         id: Math.round(Math.random() * 100),
         isComplete: false,
         text: '',
-      });
+      };
+      const newTodos = [...state.LastEditingNote.todos];
+      newTodos.push(newTodo);
+      state.LastEditingNote.todos = [...newTodos];
+    },
+    deleteTodo(state, todoIndex) {
+      const newTodos = [...state.LastEditingNote.todos];
+      newTodos.splice(todoIndex, 1);
+      state.LastEditingNote.todos = [...newTodos];
     },
   },
   actions: {
@@ -115,11 +123,11 @@ export default new Vuex.Store({
     saveNote(context) {
       context.commit('saveNote');
     },
-    cancel(context) {
-      context.commit('cancel');
-    },
     addTodo(context) {
       context.commit('addTodo');
+    },
+    deleteTodo(context, todoIndex) {
+      context.commit('deleteTodo', todoIndex);
     },
   },
   modules: {

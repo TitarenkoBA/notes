@@ -33,8 +33,7 @@ export default {
         .then(() => this.$router.push('/'));
     },
     cancel() {
-      this.$store.dispatch('cancel')
-        .then(() => this.$router.push('/'));
+      this.$router.push('/');
     },
     deleteNote() {
       const noteID = this.EditingNote.id;

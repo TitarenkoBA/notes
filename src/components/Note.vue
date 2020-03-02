@@ -17,7 +17,10 @@
           :contenteditable="!isNotesPreview">
           {{todo.text}}
         </p>
-        <button class="note__todo-button" v-if="!isNotesPreview">del</button>
+        <button
+          class="note__todo-button"
+          v-if="!isNotesPreview"
+          @click="deleteTodo($event)">del</button>
       </div>
     </div>
     <div class="note__buttons-container">
@@ -77,6 +80,11 @@ export default {
     },
     addTodo() {
       this.$store.dispatch('addTodo');
+    },
+    deleteTodo(event) {
+      const todoIndex = [...document.querySelectorAll('.note__todo')]
+        .indexOf(event.target.parentNode);
+      this.$store.dispatch('deleteTodo', todoIndex);
     },
   },
 };
