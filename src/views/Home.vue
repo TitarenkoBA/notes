@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1 class="home__title">This is an home page</h1>
-    <button class="home__button" @click="cleateNewNote()">Create</button>
+    <button class="home__button" @click="createNewNote()">Create</button>
     <NotesPreview />
   </div>
 </template>
@@ -15,8 +15,8 @@ export default {
     NotesPreview,
   },
   methods: {
-    cleateNewNote() {
-      this.$store.dispatch('cleateNewNote')
+    createNewNote() {
+      this.$store.dispatch('createNewNote')
         .then(() => this.$router.push('/editing'));
     },
   },

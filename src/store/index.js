@@ -67,11 +67,11 @@ export default new Vuex.Store({
     saveLastChanges(state, note) {
       state.LastEditingNote = { ...note };
     },
-    cleateNewNote() {
+    createNewNote() {
       this.state.LastEditingNote = {
         id: Math.round(Math.random() * 100),
         title: 'New note',
-        todos: {},
+        todos: [],
       };
     },
     saveNote(state) {
@@ -88,6 +88,13 @@ export default new Vuex.Store({
     cancel(state) {
       state.LastEditingNote = {};
     },
+    addTodo(state) {
+      state.LastEditingNote.todos.push({
+        id: Math.round(Math.random() * 100),
+        isComplete: false,
+        text: '',
+      });
+    },
   },
   actions: {
     editNote(context, note) {
@@ -102,14 +109,17 @@ export default new Vuex.Store({
     saveLastChanges(context, note) {
       context.commit('saveLastChanges', note);
     },
-    cleateNewNote(context) {
-      context.commit('cleateNewNote');
+    createNewNote(context) {
+      context.commit('createNewNote');
     },
     saveNote(context) {
       context.commit('saveNote');
     },
     cancel(context) {
       context.commit('cancel');
+    },
+    addTodo(context) {
+      context.commit('addTodo');
     },
   },
   modules: {

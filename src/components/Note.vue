@@ -75,6 +75,9 @@ export default {
       this.$store.dispatch('savePrevChanges')
         .then(() => this.$store.dispatch('saveLastChanges', note));
     },
+    addTodo() {
+      this.$store.dispatch('addTodo');
+    },
   },
 };
 </script>
