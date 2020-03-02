@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    bufferingNote: null,
     LastEditingNote: {},
     EditingNote: {},
     notes: [
@@ -103,6 +104,14 @@ export default new Vuex.Store({
       newTodos.splice(todoIndex, 1);
       state.LastEditingNote.todos = [...newTodos];
     },
+    stepBack(state) {
+      state.bufferingNote = { ...state.LastEditingNote };
+      state.LastEditingNote = { ...state.EditingNote };
+    },
+    stepForward(state) {
+      state.LastEditingNote = { ...state.bufferingNote };
+      state.bufferingNote = { ...state.EditingNote };
+    },
   },
   actions: {
     editNote(context, note) {
@@ -128,6 +137,12 @@ export default new Vuex.Store({
     },
     deleteTodo(context, todoIndex) {
       context.commit('deleteTodo', todoIndex);
+    },
+    stepBack(context) {
+      context.commit('stepBack');
+    },
+    stepForward(context) {
+      context.commit('stepForward');
     },
   },
   modules: {

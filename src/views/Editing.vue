@@ -7,8 +7,8 @@
     <div class="editing__buttons-container">
       <button class="editing__button" @click="saveNote()">Save</button>
       <button class="editing__button" @click="cancel()">Cancel</button>
-      <button class="editing__button">Step back</button>
-      <button class="editing__button">Step forward</button>
+      <button class="editing__button" @click="stepBack()">Step back</button>
+      <button class="editing__button" @click="stepForward()">Step forward</button>
       <button class="editing__button" @click="deleteNote()">Delete</button>
     </div>
   </div>
@@ -39,6 +39,16 @@ export default {
       const noteID = this.EditingNote.id;
       this.$store.dispatch('deleteNote', noteID)
         .then(() => this.$router.push('/'));
+    },
+    stepBack() {
+      if (this.$store.bufferingNote !== null) {
+        this.$store.dispatch('stepBack');
+      }
+    },
+    stepForward() {
+      if (this.$store.bufferingNote !== null) {
+        this.$store.dispatch('stepForward');
+      }
     },
   },
 };
