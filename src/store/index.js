@@ -83,9 +83,7 @@ export default new Vuex.Store({
       };
     },
     saveNote(state) {
-      state.count = 0;
-      state.NoteChanges = [];
-      const newNote = { ...state.LastEditingNote };
+      const newNote = { ...state.NoteChanges[0] };
       const newNotes = [...state.notes];
       const note = newNotes.find((el) => el.id === newNote.id);
       if (note) {
@@ -96,6 +94,8 @@ export default new Vuex.Store({
         newNotes.unshift(newNote);
       }
       state.notes = [...newNotes];
+      state.count = 0;
+      state.NoteChanges = [];
     },
     cancel(state) {
       state.count = 0;

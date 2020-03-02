@@ -87,8 +87,8 @@ export default {
     deleteTodo(event) {
       const todoIndex = [...document.querySelectorAll('.note__todo')]
         .indexOf(event.target.parentNode);
-      this.$store.dispatch('deleteTodo', todoIndex);
-      this.saveChanges();
+      this.$store.dispatch('deleteTodo', todoIndex)
+        .then(() => this.saveChanges());
     },
   },
 };
