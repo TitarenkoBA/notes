@@ -1,8 +1,9 @@
 <template>
-  <div class="note" @focusout="saveChanges()">
+  <div class="note">
     <h3 class="note__title"
       :class="{note__title_contentEditableTitle: !isNotesPreview}"
-      :contenteditable="!isNotesPreview">
+      :contenteditable="!isNotesPreview"
+      @keyup="saveChanges()">
       {{note.title}}
     </h3>
     <div class="note__todos">
@@ -11,10 +12,12 @@
           class="note__checkbox"
           v-if="!isNotesPreview"
           type="checkbox"
-          :checked="todo.isComplete">
+          :checked="todo.isComplete"
+          @change="saveChanges()">
         <p class="note__text"
           :class="{note__text_contentEditableText: !isNotesPreview}"
-          :contenteditable="!isNotesPreview">
+          :contenteditable="!isNotesPreview"
+          @keyup="saveChanges()">
           {{todo.text}}
         </p>
         <button
@@ -75,16 +78,17 @@ export default {
         title: document.querySelector('.note__title').textContent,
         todos: newTodos,
       };
-      this.$store.dispatch('savePrevChanges')
-        .then(() => this.$store.dispatch('saveLastChanges', note));
+      this.$store.dispatch('saveLastChanges', note);
     },
     addTodo() {
       this.$store.dispatch('addTodo');
+      this.saveChanges();
     },
     deleteTodo(event) {
       const todoIndex = [...document.querySelectorAll('.note__todo')]
         .indexOf(event.target.parentNode);
       this.$store.dispatch('deleteTodo', todoIndex);
+      this.saveChanges();
     },
   },
 };

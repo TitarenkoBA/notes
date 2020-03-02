@@ -33,7 +33,8 @@ export default {
         .then(() => this.$router.push('/'));
     },
     cancel() {
-      this.$router.push('/');
+      this.$store.dispatch('cancel')
+        .then(() => this.$router.push('/'));
     },
     deleteNote() {
       const noteID = this.EditingNote.id;
@@ -41,14 +42,10 @@ export default {
         .then(() => this.$router.push('/'));
     },
     stepBack() {
-      if (this.$store.bufferingNote !== null) {
-        this.$store.dispatch('stepBack');
-      }
+      this.$store.dispatch('stepBack');
     },
     stepForward() {
-      if (this.$store.bufferingNote !== null) {
-        this.$store.dispatch('stepForward');
-      }
+      this.$store.dispatch('stepForward');
     },
   },
 };

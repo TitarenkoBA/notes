@@ -5,9 +5,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    bufferingNote: null,
     LastEditingNote: {},
-    EditingNote: {},
+    NoteChanges: [],
+    count: 0,
     notes: [
       {
         id: 1,
@@ -55,6 +55,8 @@ export default new Vuex.Store({
   },
   mutations: {
     editNote(state, note) {
+      state.count = 0;
+      state.NoteChanges = [];
       state.LastEditingNote = { ...note };
     },
     deleteNote(state, noteID) {
@@ -62,21 +64,27 @@ export default new Vuex.Store({
       const noteIndex = newNotes.findIndex((el) => el.id === noteID);
       newNotes.splice(noteIndex, 1);
       state.notes = [...newNotes];
-    },
-    savePrevChanges(state) {
-      state.EditingNote = { ...this.state.LastEditingNote };
+      state.count = 0;
+      state.NoteChanges = [];
     },
     saveLastChanges(state, note) {
-      state.LastEditingNote = { ...note };
+      state.NoteChanges.unshift(note);
+      if (state.NoteChanges.length >= 100) {
+        state.NoteChanges.splice(50, 50);
+      }
     },
-    createNewNote() {
-      this.state.LastEditingNote = {
+    createNewNote(state) {
+      state.count = 0;
+      state.NoteChanges = [];
+      state.LastEditingNote = {
         id: Math.round(Math.random() * 100),
         title: 'New note',
         todos: [],
       };
     },
     saveNote(state) {
+      state.count = 0;
+      state.NoteChanges = [];
       const newNote = { ...state.LastEditingNote };
       const newNotes = [...state.notes];
       const note = newNotes.find((el) => el.id === newNote.id);
@@ -88,6 +96,10 @@ export default new Vuex.Store({
         newNotes.unshift(newNote);
       }
       state.notes = [...newNotes];
+    },
+    cancel(state) {
+      state.count = 0;
+      state.NoteChanges = [];
     },
     addTodo(state) {
       const newTodo = {
@@ -105,12 +117,18 @@ export default new Vuex.Store({
       state.LastEditingNote.todos = [...newTodos];
     },
     stepBack(state) {
-      state.bufferingNote = { ...state.LastEditingNote };
-      state.LastEditingNote = { ...state.EditingNote };
+      if (state.count < state.NoteChanges.length) {
+        // eslint-disable-next-line no-plusplus
+        state.count++;
+      }
+      state.LastEditingNote = { ...state.NoteChanges[state.count] };
     },
     stepForward(state) {
-      state.LastEditingNote = { ...state.bufferingNote };
-      state.bufferingNote = { ...state.EditingNote };
+      if (state.count >= 0) {
+        // eslint-disable-next-line no-plusplus
+        state.count--;
+      }
+      state.LastEditingNote = { ...state.NoteChanges[state.count] };
     },
   },
   actions: {
@@ -120,9 +138,6 @@ export default new Vuex.Store({
     deleteNote(context, noteID) {
       context.commit('deleteNote', noteID);
     },
-    savePrevChanges(context) {
-      context.commit('savePrevChanges');
-    },
     saveLastChanges(context, note) {
       context.commit('saveLastChanges', note);
     },
@@ -131,6 +146,9 @@ export default new Vuex.Store({
     },
     saveNote(context) {
       context.commit('saveNote');
+    },
+    cancel(context) {
+      context.commit('cancel');
     },
     addTodo(context) {
       context.commit('addTodo');
