@@ -1,8 +1,19 @@
 <template>
   <div id="app">
+    <modalWindow v-if="this.$store.state.ModalWindowIsShow"/>
     <router-view/>
   </div>
 </template>
+
+<script>
+import modalWindow from '@/components/modalWindow.vue';
+
+export default {
+  components: {
+    modalWindow,
+  },
+};
+</script>
 
 <style lang="less">
 #app {

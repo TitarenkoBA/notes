@@ -7,7 +7,10 @@ export default new Vuex.Store({
   state: {
     LastEditingNote: {},
     NoteChanges: [],
-    count: 0,
+    ChangesCounter: 0,
+    ModalWindowIsShow: false,
+    ModalWindowTypeIsCancel: null,
+    DeletingNoteID: null,
     notes: [
       {
         id: 1,
@@ -55,17 +58,20 @@ export default new Vuex.Store({
   },
   mutations: {
     editNote(state, note) {
-      state.count = 0;
+      state.ChangesCounter = 0;
       state.NoteChanges = [];
       state.LastEditingNote = { ...note };
     },
     deleteNote(state, noteID) {
-      const newNotes = [...state.notes];
-      const noteIndex = newNotes.findIndex((el) => el.id === noteID);
-      newNotes.splice(noteIndex, 1);
-      state.notes = [...newNotes];
-      state.count = 0;
-      state.NoteChanges = [];
+      state.ModalWindowTypeIsCancel = false;
+      state.ModalWindowIsShow = true;
+      state.DeletingNoteID = noteID;
+      // const newNotes = [...state.notes];
+      // const noteIndex = newNotes.findIndex((el) => el.id === noteID);
+      // newNotes.splice(noteIndex, 1);
+      // state.notes = [...newNotes];
+      // state.ChangesCounter = 0;
+      // state.NoteChanges = [];
     },
     saveLastChanges(state, note) {
       state.NoteChanges.unshift(note);
@@ -74,7 +80,7 @@ export default new Vuex.Store({
       }
     },
     createNewNote(state) {
-      state.count = 0;
+      state.ChangesCounter = 0;
       state.NoteChanges = [];
       state.LastEditingNote = {
         id: Math.round(Math.random() * 100),
@@ -94,12 +100,14 @@ export default new Vuex.Store({
         newNotes.unshift(newNote);
       }
       state.notes = [...newNotes];
-      state.count = 0;
+      state.ChangesCounter = 0;
       state.NoteChanges = [];
     },
     cancel(state) {
-      state.count = 0;
-      state.NoteChanges = [];
+      state.ModalWindowTypeIsCancel = true;
+      state.ModalWindowIsShow = true;
+      // state.ChangesCounter = 0;
+      // state.NoteChanges = [];
     },
     addTodo(state) {
       const newTodo = {
@@ -117,18 +125,39 @@ export default new Vuex.Store({
       state.LastEditingNote.todos = [...newTodos];
     },
     stepBack(state) {
-      if (state.count < state.NoteChanges.length) {
+      if (state.ChangesCounter < state.NoteChanges.length) {
         // eslint-disable-next-line no-plusplus
-        state.count++;
+        state.ChangesCounter++;
       }
-      state.LastEditingNote = { ...state.NoteChanges[state.count] };
+      state.LastEditingNote = { ...state.NoteChanges[state.ChangesCounter] };
     },
     stepForward(state) {
-      if (state.count >= 0) {
+      if (state.ChangesCounter >= 0) {
         // eslint-disable-next-line no-plusplus
-        state.count--;
+        state.ChangesCounter--;
       }
-      state.LastEditingNote = { ...state.NoteChanges[state.count] };
+      state.LastEditingNote = { ...state.NoteChanges[state.ChangesCounter] };
+    },
+    modalConfirmCancel(state) {
+      state.ChangesCounter = 0;
+      state.NoteChanges = [];
+      state.ModalWindowIsShow = false;
+      state.ModalWindowTypeIsCancel = 0;
+    },
+    modalConfirmDelete(state) {
+      const noteID = state.DeletingNoteID;
+      const newNotes = [...state.notes];
+      const noteIndex = newNotes.findIndex((el) => el.id === noteID);
+      newNotes.splice(noteIndex, 1);
+      state.notes = [...newNotes];
+      state.ChangesCounter = 0;
+      state.NoteChanges = [];
+      state.ModalWindowIsShow = false;
+      state.ModalWindowTypeIsCancel = 0;
+    },
+    modalDiscard(state) {
+      state.ModalWindowIsShow = false;
+      state.ModalWindowTypeIsCancel = 0;
     },
   },
   actions: {
@@ -161,6 +190,15 @@ export default new Vuex.Store({
     },
     stepForward(context) {
       context.commit('stepForward');
+    },
+    modalConfirmCancel(context) {
+      context.commit('modalConfirmCancel');
+    },
+    modalConfirmDelete(context) {
+      context.commit('modalConfirmDelete');
+    },
+    modalDiscard(context) {
+      context.commit('modalDiscard');
     },
   },
   modules: {

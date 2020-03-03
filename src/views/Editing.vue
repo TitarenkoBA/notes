@@ -22,30 +22,28 @@ export default {
   components: {
     Note,
   },
-  computed: {
-    EditingNote() {
-      return this.$store.state.LastEditingNote;
-    },
-  },
   methods: {
     saveNote() {
       this.$store.dispatch('saveNote')
         .then(() => this.$router.push('/'));
     },
     cancel() {
-      this.$store.dispatch('cancel')
-        .then(() => this.$router.push('/'));
+      this.$store.dispatch('cancel');
     },
     deleteNote() {
       const noteID = this.EditingNote.id;
-      this.$store.dispatch('deleteNote', noteID)
-        .then(() => this.$router.push('/'));
+      this.$store.dispatch('deleteNote', noteID);
     },
     stepBack() {
       this.$store.dispatch('stepBack');
     },
     stepForward() {
       this.$store.dispatch('stepForward');
+    },
+  },
+  computed: {
+    EditingNote() {
+      return this.$store.state.LastEditingNote;
     },
   },
 };
