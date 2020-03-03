@@ -2,22 +2,27 @@
   <div class="home">
     <h1 class="home__title">This is an home page</h1>
     <button class="home__button" @click="createNewNote()">Create</button>
-    <NotesPreview />
+    <Note v-for="note of notes" :key="note.id" :id="note.id" :note="note" :isNotesPreview="true"/>
   </div>
 </template>
 
 <script>
-import NotesPreview from '@/components/NotesPreview.vue';
+import Note from '@/components/Note.vue';
 
 export default {
   name: 'Home',
   components: {
-    NotesPreview,
+    Note,
   },
   methods: {
     createNewNote() {
       this.$store.dispatch('createNewNote')
         .then(() => this.$router.push('/editing'));
+    },
+  },
+  computed: {
+    notes() {
+      return this.$store.state.notes;
     },
   },
 };

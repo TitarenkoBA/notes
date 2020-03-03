@@ -1,23 +1,28 @@
 <template>
-  <div class="note">
+  <div class="note" @focusout="saveChanges()">
     <h3 class="note__title"
+      @keyup="saveChanges()"
       :class="{note__title_contentEditableTitle: !isNotesPreview}"
-      :contenteditable="!isNotesPreview"
-      @keyup="saveChanges()">
+      :contenteditable="!isNotesPreview">
       {{note.title}}
     </h3>
     <div class="note__todos">
       <div v-for="todo of note.todos" :key="todo.id" :id="todo.id" class="note__todo">
-        <input
-          class="note__checkbox"
-          v-if="!isNotesPreview"
-          type="checkbox"
-          :checked="todo.isComplete"
-          @change="saveChanges()">
+        <label
+          class="note_label"
+          :class="{checked: todo.isComplete}"
+          @keyup="saveChanges()" >
+          <input
+            v-if="!isNotesPreview"
+            class="note__checkbox"
+            type="checkbox"
+            :checked="todo.isComplete"
+            @change="checkTodo($event)">
+        </label>
         <p class="note__text"
+          @keyup="saveChanges()"
           :class="{note__text_contentEditableText: !isNotesPreview}"
-          :contenteditable="!isNotesPreview"
-          @keyup="saveChanges()">
+          :contenteditable="!isNotesPreview">
           {{todo.text}}
         </p>
         <button
@@ -90,6 +95,11 @@ export default {
       this.$store.dispatch('deleteTodo', todoIndex)
         .then(() => this.saveChanges());
     },
+    checkTodo(event) {
+      const todoIndex = [...document.querySelectorAll('.note__todo')]
+        .indexOf(event.target.parentNode.parentNode);
+      this.$store.dispatch('checkTodo', todoIndex);
+    },
   },
 };
 </script>
@@ -142,7 +152,27 @@ export default {
   }
 }
 .note__checkbox {
+  display: none;
+}
+.note_label {
+  cursor: pointer;
   margin-right: 5%;
+  margin-top: 5px;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #0099ff;
+  border-radius: 10px;
+}
+.checked {
+  &:before {
+    content: "\2713";
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+    font-size: 40px;
+    margin-left: 3px;
+    color: #0099ff;
+    text-align: center;
+    line-height: 15px;
+  }
 }
 .note__text {
   width: 80%;

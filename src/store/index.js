@@ -95,11 +95,13 @@ export default new Vuex.Store({
       if (note) {
         note.id = newNote.id;
         note.title = newNote.title;
+        note.todos = [];
         note.todos = newNote.todos;
-      } else {
+      } else if (state.NoteChanges[0]) {
         newNotes.unshift(newNote);
       }
       state.notes = [...newNotes];
+      state.LastEditingNote = { ...newNote };
       state.ChangesCounter = 0;
       state.NoteChanges = [];
     },
@@ -159,6 +161,11 @@ export default new Vuex.Store({
       state.ModalWindowIsShow = false;
       state.ModalWindowTypeIsCancel = 0;
     },
+    checkTodo(state, todoIndex) {
+      const newTodos = [...state.LastEditingNote.todos];
+      newTodos[todoIndex].isComplete = !newTodos[todoIndex].isComplete;
+      state.LastEditingNote.todos = [...newTodos];
+    },
   },
   actions: {
     editNote(context, note) {
@@ -199,6 +206,9 @@ export default new Vuex.Store({
     },
     modalDiscard(context) {
       context.commit('modalDiscard');
+    },
+    checkTodo(context, todoIndex) {
+      context.commit('checkTodo', todoIndex);
     },
   },
   modules: {
