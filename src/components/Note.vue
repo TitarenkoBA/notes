@@ -6,7 +6,7 @@
       :contenteditable="!isNotesPreview">
       {{note.title}}
     </h3>
-    <div class="note__todos">
+    <div class="note__todos" :class="{note__todos_cut: isNotesPreview}">
       <div v-for="todo of note.todos" :key="todo.id" :id="todo.id" class="note__todo">
         <label
           class="note__label"
@@ -162,7 +162,12 @@ export default {
     }
   }
 }
+.note__todos_cut {
+  max-height: 155px;
+  overflow: hidden;
+}
 .note__todo {
+  margin-top: 1%;
   display: flex;
   border-bottom: 1px solid #0099ff;
   &:last-child {

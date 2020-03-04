@@ -4,7 +4,13 @@
     <button class="home__button" @click="createNewNote()" title="Create new note">
       Create
     </button>
-    <Note v-for="note of notes" :key="note.id" :id="note.id" :note="note" :isNotesPreview="true"/>
+    <Note
+      v-for="note of notes"
+      :key="note.id"
+      :id="note.id"
+      :note="note"
+      :isNotesPreview="true"
+      class="home__note"/>
   </div>
 </template>
 
