@@ -66,12 +66,6 @@ export default new Vuex.Store({
       state.ModalWindowTypeIsCancel = false;
       state.ModalWindowIsShow = true;
       state.DeletingNoteID = noteID;
-      // const newNotes = [...state.notes];
-      // const noteIndex = newNotes.findIndex((el) => el.id === noteID);
-      // newNotes.splice(noteIndex, 1);
-      // state.notes = [...newNotes];
-      // state.ChangesCounter = 0;
-      // state.NoteChanges = [];
     },
     saveLastChanges(state, note) {
       state.NoteChanges.unshift(note);
@@ -108,8 +102,6 @@ export default new Vuex.Store({
     cancel(state) {
       state.ModalWindowTypeIsCancel = true;
       state.ModalWindowIsShow = true;
-      // state.ChangesCounter = 0;
-      // state.NoteChanges = [];
     },
     addTodo(state) {
       const newTodo = {
