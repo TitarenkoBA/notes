@@ -12,48 +12,48 @@ export default new Vuex.Store({
     ModalWindowTypeIsCancel: null,
     DeletingNoteID: null,
     notes: [
-      {
-        id: 1,
-        title: 'first',
-        todos: [
-          {
-            id: 1,
-            isComplete: true,
-            text: 'first',
-          },
-          {
-            id: 2,
-            isComplete: false,
-            text: 'second',
-          },
-          {
-            id: 3,
-            isComplete: false,
-            text: 'third',
-          },
-        ],
-      },
-      {
-        id: 2,
-        title: 'second',
-        todos: [
-          {
-            id: 1,
-            isComplete: true,
-            text: 'first',
-          },
-          {
-            id: 2,
-            isComplete: true,
-            text: 'second',
-          },
-          {
-            id: 3,
-            isComplete: false,
-            text: 'third',
-          },
-        ],
-      },
+      // {
+      //   id: 1,
+      //   title: 'first',
+      //   todos: [
+      //     {
+      //       id: 1,
+      //       isComplete: true,
+      //       text: 'first',
+      //     },
+      //     {
+      //       id: 2,
+      //       isComplete: false,
+      //       text: 'second',
+      //     },
+      //     {
+      //       id: 3,
+      //       isComplete: false,
+      //       text: 'third',
+      //     },
+      //   ],
+      // },
+      // {
+      //   id: 2,
+      //   title: 'second',
+      //   todos: [
+      //     {
+      //       id: 1,
+      //       isComplete: true,
+      //       text: 'first',
+      //     },
+      //     {
+      //       id: 2,
+      //       isComplete: true,
+      //       text: 'second',
+      //     },
+      //     {
+      //       id: 3,
+      //       isComplete: false,
+      //       text: 'third',
+      //     },
+      //   ],
+      // },
     ],
   },
   mutations: {
@@ -158,6 +158,16 @@ export default new Vuex.Store({
       newTodos[todoIndex].isComplete = !newTodos[todoIndex].isComplete;
       state.LastEditingNote.todos = [...newTodos];
     },
+    loadNotes(state) {
+      if (localStorage.getItem('notes')) {
+        state.notes = [...JSON.parse(localStorage.getItem('notes'))];
+      } else {
+        state.notes = [];
+      }
+    },
+    updateNotes(state) {
+      localStorage.setItem('notes', JSON.stringify(state.notes));
+    },
   },
   actions: {
     editNote(context, note) {
@@ -201,6 +211,12 @@ export default new Vuex.Store({
     },
     checkTodo(context, todoIndex) {
       context.commit('checkTodo', todoIndex);
+    },
+    loadNotes(context) {
+      context.commit('loadNotes');
+    },
+    updateNotes(context) {
+      context.commit('updateNotes');
     },
   },
   modules: {

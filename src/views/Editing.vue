@@ -35,6 +35,7 @@ export default {
   methods: {
     saveNote() {
       this.$store.dispatch('saveNote')
+        .then(() => this.$store.dispatch('updateNotes'))
         .then(() => this.$router.push('/'));
     },
     cancel() {
@@ -96,9 +97,11 @@ export default {
   }
   &:hover {
     background-color: #0066ff;
+    box-shadow: none;
   }
   &:active {
     background-color: #99ccff;
+    box-shadow: none;
   }
   @media screen and (max-width: 980px) {
     & {

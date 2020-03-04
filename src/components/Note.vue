@@ -170,9 +170,6 @@ export default {
   margin-top: 1%;
   display: flex;
   border-bottom: 1px solid #0099ff;
-  &:last-child {
-    border-bottom: none;
-  }
 }
 .note__checkbox {
   display: none;
@@ -186,6 +183,9 @@ export default {
   border: 2px solid #0099ff;
   border-radius: 10px;
   box-shadow: 2px 2px 2px inset rgba(0, 0, 0, 0.5);
+  &:hover {
+    border: 2px solid #0066ff;
+  }
 }
 .checked {
   &:before {
@@ -244,9 +244,11 @@ export default {
   transition: all 0.5s;
   &:hover {
     background-color: #0066ff;
+    box-shadow: none;
   }
   &:active {
     background-color: #99ccff;
+    box-shadow: none;
   }
 }
 </style>

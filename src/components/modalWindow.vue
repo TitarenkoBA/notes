@@ -24,9 +24,11 @@ export default {
     modalConfirm() {
       if (this.isCancelOrDelete) {
         this.$store.dispatch('modalConfirmCancel')
+          .then(() => this.$store.dispatch('updateNotes'))
           .then(() => this.$router.push('/'));
       } else {
         this.$store.dispatch('modalConfirmDelete')
+          .then(() => this.$store.dispatch('updateNotes'))
           .then(() => this.$router.push('/'));
       }
     },
@@ -73,12 +75,15 @@ export default {
   margin: 5% 5%;
   color: white;
   background-color: #0099ff;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
   transition: all 0.5s;
   &:hover {
     background-color: #0066ff;
+    box-shadow: none;
   }
   &:active {
     background-color: #99ccff;
+    box-shadow: none;
   }
 }
 </style>

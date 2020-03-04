@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1 class="home__title">This is an home page</h1>
+    <h1 class="home__title">This is a home page</h1>
     <button class="home__button" @click="createNewNote()" title="Create new note">
       Create
     </button>
@@ -33,6 +33,9 @@ export default {
       return this.$store.state.notes;
     },
   },
+  mounted() {
+    this.$store.dispatch('loadNotes');
+  },
 };
 </script>
 
@@ -58,9 +61,11 @@ export default {
   transition: all 0.5s;
   &:hover {
     background-color: #0066ff;
+    box-shadow: none;
   }
   &:active {
     background-color: #99ccff;
+    box-shadow: none;
   }
   @media screen and (max-width: 980px) {
     & {
