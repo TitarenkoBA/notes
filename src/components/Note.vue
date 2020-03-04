@@ -1,5 +1,5 @@
 <template>
-  <div class="note" @focusout="saveChanges()">
+  <div class="note">
     <h3 class="note__title"
       @keyup="saveChanges()"
       :class="{note__title_contentEditableTitle: !isNotesPreview}"
@@ -10,8 +10,7 @@
       <div v-for="todo of note.todos" :key="todo.id" :id="todo.id" class="note__todo">
         <label
           class="note_label"
-          :class="{checked: todo.isComplete}"
-          @keyup="saveChanges()" >
+          :class="{checked: todo.isComplete}">
           <input
             v-if="!isNotesPreview"
             class="note__checkbox"
@@ -72,8 +71,8 @@ export default {
       todos.forEach((item) => {
         newTodos.push(
           {
-            id: item.childNodes[1].getAttribute('id'),
-            isComplete: item.childNodes[0].checked,
+            id: item.getAttribute('id'),
+            isComplete: item.childNodes[0].childNodes[0].checked,
             text: item.childNodes[1].textContent,
           },
         );
@@ -86,8 +85,8 @@ export default {
       this.$store.dispatch('saveLastChanges', note);
     },
     addTodo() {
-      this.$store.dispatch('addTodo');
-      this.saveChanges();
+      this.$store.dispatch('addTodo')
+        .then(() => this.saveChanges());
     },
     deleteTodo(event) {
       const todoIndex = [...document.querySelectorAll('.note__todo')]
@@ -98,7 +97,8 @@ export default {
     checkTodo(event) {
       const todoIndex = [...document.querySelectorAll('.note__todo')]
         .indexOf(event.target.parentNode.parentNode);
-      this.$store.dispatch('checkTodo', todoIndex);
+      this.$store.dispatch('checkTodo', todoIndex)
+        .then(() => this.saveChanges());
     },
   },
 };
