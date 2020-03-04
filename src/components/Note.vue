@@ -9,7 +9,7 @@
     <div class="note__todos">
       <div v-for="todo of note.todos" :key="todo.id" :id="todo.id" class="note__todo">
         <label
-          class="note_label"
+          class="note__label"
           :class="{checked: todo.isComplete}">
           <input
             v-if="!isNotesPreview"
@@ -27,26 +27,32 @@
         <button
           class="note__todo-button"
           v-if="!isNotesPreview"
-          @click="deleteTodo($event)">del</button>
+          @click="deleteTodo($event)"
+          title="Delete todo">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
       </div>
     </div>
     <div class="note__buttons-container">
       <button
         v-if="isNotesPreview"
         class="note__button"
-        @click="editNote(note)">
+        @click="editNote(note)"
+        title="Edit note">
         Edit
       </button>
       <button
         v-if="isNotesPreview"
         class="note__button"
-        @click="deleteNote(note)">
+        @click="deleteNote(note)"
+        title="Delete note">
         Delete
       </button>
       <button
         v-if="!isNotesPreview"
         class="note__button"
-        @click="addTodo()">
+        @click="addTodo()"
+        title="Add todo">
         Add
       </button>
     </div>
@@ -110,11 +116,17 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   margin: 1% auto;
-  width: 60%;
+  padding-bottom: 10px;
+  width: 70%;
   height: 20%;
   border: 5px solid #0099ff;
   border-radius: 10px;
-  box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.4)
+  box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.4);
+  @media screen and (max-width: 980px) {
+    & {
+      width: 98%;
+    }
+  }
 }
 .note__title {
   text-align: left;
@@ -143,6 +155,12 @@ export default {
   width: 75%;
   text-align: left;
   padding-left: 5%;
+  @media screen and (max-width: 980px) {
+    & {
+      width: 98%;
+      padding-right: 5px;
+    }
+  }
 }
 .note__todo {
   display: flex;
@@ -154,7 +172,7 @@ export default {
 .note__checkbox {
   display: none;
 }
-.note_label {
+.note__label {
   cursor: pointer;
   margin-right: 5%;
   margin-top: 5px;
@@ -162,11 +180,12 @@ export default {
   height: 30px;
   border: 2px solid #0099ff;
   border-radius: 10px;
+  box-shadow: 2px 2px 2px inset rgba(0, 0, 0, 0.5);
 }
 .checked {
   &:before {
     content: "\2713";
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .2);
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
     font-size: 40px;
     margin-left: 3px;
     color: #0099ff;
@@ -194,12 +213,18 @@ export default {
 }
 .note__todo-button {
   .note__button;
-  width: 7%;
+  min-width: 9%;
+  max-width: 10%;
   margin-top: 1%;
 }
 .note__buttons-container {
   width: 20%;
   padding-top: 5%;
+  @media screen and (max-width: 980px) {
+    & {
+      width: 98%;
+    }
+  }
 }
 .note__button {
   margin-bottom: 5px;
@@ -210,6 +235,7 @@ export default {
   padding: 5px;
   color: white;
   background-color: #0099ff;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
   transition: all 0.5s;
   &:hover {
     background-color: #0066ff;

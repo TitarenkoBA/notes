@@ -5,11 +5,21 @@
       :note="EditingNote"
       :isNotesPreview="false"/>
     <div class="editing__buttons-container">
-      <button class="editing__button" @click="saveNote()">Save</button>
-      <button class="editing__button" @click="cancel()">Cancel</button>
-      <button class="editing__button" @click="stepBack()">Step back</button>
-      <button class="editing__button" @click="stepForward()">Step forward</button>
-      <button class="editing__button" @click="deleteNote()">Delete</button>
+      <button class="editing__button" @click="saveNote()" title="Save note">
+        Save
+      </button>
+      <button class="editing__button" @click="cancel()" title="Cancel changes">
+        Cancel
+      </button>
+      <button class="editing__button" @click="stepBack()" title="Undo changing">
+        <i class="fa fa-undo" aria-hidden="true"></i>
+      </button>
+      <button class="editing__button" @click="stepForward()" title="Redo changing">
+        <i class="fa fa-redo" aria-hidden="true"></i>
+      </button>
+      <button class="editing__button" @click="deleteNote()" title="Delete note">
+        Delete
+      </button>
     </div>
   </div>
 </template>
@@ -50,10 +60,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.editing__title {
+  background-color: #0066ff;
+  color: white;
+  padding: 3%;
+  margin: 0 0 3% 0;
+  box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.4);
+}
 .editing__buttons-container {
   width: 80%;
-  padding-top: 5%;
+  padding-top: 3%;
   margin: auto;
+  @media screen and (max-width: 980px) {
+    & {
+      display: flex;
+      flex-direction: column;
+      width: 98%;
+    }
+  }
 }
 .editing__button {
   margin-bottom: 5px;
@@ -65,6 +89,7 @@ export default {
   margin-right: 5px;
   color: white;
   background-color: #0099ff;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
   transition: all 0.5s;
   &:last-child {
     margin-right: 0;
@@ -74,6 +99,11 @@ export default {
   }
   &:active {
     background-color: #99ccff;
+  }
+  @media screen and (max-width: 980px) {
+    & {
+      width: 100%;
+    }
   }
 }
 </style>
