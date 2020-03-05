@@ -1,25 +1,27 @@
 # notes
-
+```
+Vue + Vue Router + Vuex + Less + Express
+```
 ## Project setup
 ```
 npm install
 ```
-
 ### Compiles and hot-reloads for development
 ```
 npm run serve
 ```
-
 ### Compiles and minifies for production
 ```
 npm run build
 ```
-
 ### Lints and fixes files
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-"# notes" 
+### Start local server 
+```
+npm run local_server
+```
+### Steps for build dist and launch server
+```
+npm install => npm run build => npm run local_server => see result at http://localhost:3000/

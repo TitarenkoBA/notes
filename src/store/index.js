@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import Axios from 'axios';
 
 Vue.use(Vuex);
 
@@ -11,50 +12,7 @@ export default new Vuex.Store({
     ModalWindowIsShow: false,
     ModalWindowTypeIsCancel: null,
     DeletingNoteID: null,
-    notes: [
-      // {
-      //   id: 1,
-      //   title: 'first',
-      //   todos: [
-      //     {
-      //       id: 1,
-      //       isComplete: true,
-      //       text: 'first',
-      //     },
-      //     {
-      //       id: 2,
-      //       isComplete: false,
-      //       text: 'second',
-      //     },
-      //     {
-      //       id: 3,
-      //       isComplete: false,
-      //       text: 'third',
-      //     },
-      //   ],
-      // },
-      // {
-      //   id: 2,
-      //   title: 'second',
-      //   todos: [
-      //     {
-      //       id: 1,
-      //       isComplete: true,
-      //       text: 'first',
-      //     },
-      //     {
-      //       id: 2,
-      //       isComplete: true,
-      //       text: 'second',
-      //     },
-      //     {
-      //       id: 3,
-      //       isComplete: false,
-      //       text: 'third',
-      //     },
-      //   ],
-      // },
-    ],
+    notes: [],
   },
   mutations: {
     editNote(state, note) {
@@ -158,15 +116,10 @@ export default new Vuex.Store({
       newTodos[todoIndex].isComplete = !newTodos[todoIndex].isComplete;
       state.LastEditingNote.todos = [...newTodos];
     },
-    loadNotes(state) {
-      if (localStorage.getItem('notes')) {
-        state.notes = [...JSON.parse(localStorage.getItem('notes'))];
-      } else {
-        state.notes = [];
-      }
+    loadNotes(state, data) {
+      state.notes = data;
     },
-    updateNotes(state) {
-      localStorage.setItem('notes', JSON.stringify(state.notes));
+    updateNotes() {
     },
   },
   actions: {
@@ -213,9 +166,19 @@ export default new Vuex.Store({
       context.commit('checkTodo', todoIndex);
     },
     loadNotes(context) {
+      Axios.get('/api/notes')
+        .then((response) => context.commit('loadNotes', response.data))
+        .catch((error) => {
+          console.log(error);
+        });
       context.commit('loadNotes');
     },
     updateNotes(context) {
+      Axios.post('/api/updateNotes', this.state.notes)
+        .then(context.commit('updateNotes'))
+        .catch((error) => {
+          console.log(error);
+        });
       context.commit('updateNotes');
     },
   },

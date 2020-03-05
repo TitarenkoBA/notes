@@ -41,11 +41,12 @@ export default {
 
 <style lang="less" scoped>
 .home__title {
-  background-color: #0066ff;
+  background-color: #0099ff;
   color: white;
   padding: 3%;
   margin: 0 0 1% 0;
   box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.4);
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
 }
 .home__button {
   margin: 10px auto 0 -50%;

@@ -67,6 +67,7 @@ export default {
   padding: 3%;
   margin: 0 0 3% 0;
   box-shadow: 7px 7px 7px rgba(0, 0, 0, 0.4);
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
 }
 .editing__buttons-container {
   width: 80%;

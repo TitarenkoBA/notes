@@ -34,9 +34,10 @@ export default {
   cursor: pointer;
   position: absolute;
   left: 3%;
-  top: 5%;
+  top: 3%;
   font-size: 3em;
   color: white;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
 }
 * {
   font-size: 1em;
