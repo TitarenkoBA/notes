@@ -62,7 +62,7 @@ export default {
 
 <style lang="less" scoped>
 .editing__title {
-  background-color: #0066ff;
+  background-color: #0099ff;
   color: white;
   padding: 3%;
   margin: 0 0 3% 0;
